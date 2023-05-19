@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pomodoro Timer</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      color: #333;
+    }
+    .timer {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+    .buttons {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 0 5px;
+    }
+    input {
+      padding: 5px;
+      font-size: 16px;
+      width: 60px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Timer</h1>
+  <div>
+    <label for="timeInput">Set time (in minutes):</label>
+    <input id="timeInput" type="number" min="1" max="60" value="25">
+    <button id="startBtn">Start</button>
+    <button id="pauseBtn">Pause</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+  <div class="timer">25:00</div>
+
+  <script>
+    let interval;
+    let timeLeft = 1500; // 25 minutes in seconds
+    let isRunning = false;
+
+    function startTimer() {
+      if (!isRunning) {
+        const minutes = parseInt(document.getElementById('timeInput').value);
+        timeLeft = minutes * 60;
+        interval = setInterval(updateTimer, 1000);
+        isRunning = true;
+      }
+    }
+
+    function pauseTimer() {
+      clearInterval(interval);
+      isRunning = false;
+    }
+
+    function resetTimer() {
+      clearInterval(interval);
+      timeLeft = 1500; // Reset to 25 minutes
+      updateTimer();
+      isRunning = false;
+    }
+
+    function updateTimer() {
+      const minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+
+      // Add leading zero if seconds < 10
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+
+      document.querySelector('.timer').textContent = `${minutes}:${seconds}`;
+
+      if (timeLeft === 0) {
+        clearInterval(interval);
+        playAlarm();
+        isRunning = false;
+      } else {
+        timeLeft--;
+      }
+    }
+
+    function playAlarm() {
+      const audio = new Audio('alarm_sound.mp3'); // Replace with your alarm sound file
+      audio.play();
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startTimer);
+    document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
+    document.getElementById('resetBtn').addEventListener('click', resetTimer);
+  </script>
+</body>
+</html>
